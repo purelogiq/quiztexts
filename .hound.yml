@@ -1,0 +1,28 @@
+fail_on_violations: true
+
+jshint:
+  config_file: .jshintrc
+
+scss:
+  enabled: false
+
+ruby:
+  config_file: .rubocop.yml
+
+eslint:
+  enabled: false
+
+python:
+  enabled: false
+
+go:
+  enabled: false
+
+haml:
+  enabled: false
+
+coffeescript:
+  enabled: false
+
+swift:
+  enabled: false
