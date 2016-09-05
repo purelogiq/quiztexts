@@ -25,3 +25,6 @@
 
 # Ignore RubyMine IDE Files
 .idea
+
+# Ignore production credentials
+.env.production
