@@ -1,2 +1,2 @@
-# quiztexts
-A service to help students study via text
+# Flash Txts
+Flash cards via text message!
