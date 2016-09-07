@@ -2,7 +2,7 @@
 lock '3.6.1'
 
 set :application, 'flashtxts'
-set :repo_url, 'git@github.com:purelogiq/flashtxts.git'
+set :repo_url, 'https://github.com/purelogiq/flashtxts.git'
 
 def abort_deploy
   puts 'Aborting deploy'
