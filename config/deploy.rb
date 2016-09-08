@@ -3,6 +3,7 @@ lock '3.6.1'
 
 set :application, 'flashtxts'
 set :repo_url, 'https://github.com/purelogiq/flashtxts.git'
+set :nginx_use_ssl, true
 
 def abort_deploy
   puts 'Aborting deploy'
