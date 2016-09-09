@@ -9,7 +9,15 @@ class MessagesController < ApplicationController
   end
 
   def incoming
-    puts request.body
+    if params['object'] == 'page'
+      params['message']['entry'].each do |messaging|
+        messaging.each do |message|
+          puts "\n\n ------> FIND ME IN THE LOG FILE --------------\n\n"
+          puts message[0]['sender']['id']
+          puts "\n\n ------> FIND ME IN THE LOG FILE --------------\n\n"
+        end
+      end
+    end
     head :ok
   end
 end
