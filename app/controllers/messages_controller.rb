@@ -7,4 +7,9 @@ class MessagesController < ApplicationController
       head :forbidden
     end
   end
+
+  def incoming
+    puts request.body
+    head :ok
+  end
 end
