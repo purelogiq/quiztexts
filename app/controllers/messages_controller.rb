@@ -32,6 +32,9 @@ class MessagesController < ApplicationController
   private
 
   def send_message(data)
+    Rails.logger.error "=====================>>>> "
+    Rails.logger.error "https://graph.facebook.com/v2.6/me/messages?access_token=#{ENV['PAGE_ACCESS_TOKEN']}"
+    Rails.logger.error "=====================>>>> "
     RestClient.post "https://graph.facebook.com/v2.6/me/messages?access_token=#{ENV['PAGE_ACCESS_TOKEN']}",
                     data, :content_type => :json
   end
