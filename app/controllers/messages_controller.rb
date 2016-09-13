@@ -2,8 +2,9 @@ class MessagesController < ApplicationController
   MESSAGES = [
       'Hi! How are you!',
       'I\'m hungry, have anything to eat?',
-      'K',
-      'Hello world'
+      'My name is Flashy',
+      'What do you want to study today? :)',
+      'When is your big test!?'
   ]
 
   def webhook
