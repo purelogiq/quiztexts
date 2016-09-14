@@ -19,12 +19,12 @@ class MessagesController < ApplicationController
   def incoming
     if params['object'] == 'page'
       params['entry'].each do |entry|
-        user = entry['messaging'][0]['sender']['id']
-        message_data = {
-            recipient: {id: user},
-            message: {text: MESSAGES.sample}
-        }.to_json
-        send_message(message_data)
+        if entry['messaging'][0]['message'] # TODO account for multiple messages
+          user = entry['messaging'][0]['sender']['id']
+          text = entry['messaging'][0]['message']['text']
+          Rails.logger.info text
+          send_message(user, MESSAGES.sample)
+        end
       end
     end
     head :ok
@@ -32,11 +32,12 @@ class MessagesController < ApplicationController
 
   private
 
-  def send_message(data)
-    Rails.logger.error "=====================>>>> "
-    Rails.logger.error "https://graph.facebook.com/v2.6/me/messages?access_token=#{ENV['PAGE_ACCESS_TOKEN']}"
-    Rails.logger.error "=====================>>>> "
+  def send_message(user, message)
+    data = {
+        recipient: {id: user},
+        message: {text: message}
+    }.to_json
     RestClient.post "https://graph.facebook.com/v2.6/me/messages?access_token=#{ENV['PAGE_ACCESS_TOKEN']}",
-                    data, :content_type => :json
+                    data, content_type: :json
   end
 end
