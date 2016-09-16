@@ -2,11 +2,12 @@ class MessengerService
 
   def initialize(sender_id, input)
     @user = User.find_or_create_by(messenger_id: sender_id)
-    @input = input.downcase.strip
+    @input = input
   end
 
   def route_incoming
     return ask_name unless @user.name.present?
+    @input = @input.downcase.strip
     case @input
       when 'register'
         @user.update_attribute(:last_command, 'register')
