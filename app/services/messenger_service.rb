@@ -41,24 +41,29 @@ class MessengerService
     if @user.last_question.nil?
       @user.update_attribute(:last_question, 'ask name')
       send_message "What's your name, or what would you like me to call you? :)"
+      sleep 0.5
       send_message "I think that would be more polite than automatically getting it from your facebook account :P"
     else
       @user.update_attribute(:name, @input)
       send_message "Nice to meet you #{@user.name}! :D"
+      send_message "Type 'register', 'study', or 'quiz me'"
       clear_state
     end
   end
 
   def select_quiz
     send_message "You chose select quiz"
+    clear_state
   end
 
   def quiz_me
     send_message "You quiz me"
+    clear_state
   end
 
   def study
     send_message "You study"
+    clear_state
   end
 
   def send_message(message)
