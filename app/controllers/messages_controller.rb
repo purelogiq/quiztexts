@@ -9,7 +9,7 @@ class MessagesController < ApplicationController
 
   def webhook
     if params['hub.mode'] == 'subscribe' &&
-         params['hub.verify_token'] == 'flashy_is_the_bomb'
+         params['hub.verify_token'] == 'flashy_is_the_bomb' # Sorta unsafe
       render text: params['hub.challenge']
     else
       head :forbidden
@@ -20,24 +20,13 @@ class MessagesController < ApplicationController
     if params['object'] == 'page'
       params['entry'].each do |entry|
         if entry['messaging'][0]['message'] # TODO account for multiple messages
-          user = entry['messaging'][0]['sender']['id']
+          sender_id = entry['messaging'][0]['sender']['id']
           text = entry['messaging'][0]['message']['text']
-          Rails.logger.info text
-          send_message(user, MESSAGES.sample)
+          messenger_service = MessengerService.new(sender_id, text)
+          messenger_service.route_incoming
         end
       end
     end
     head :ok
-  end
-
-  private
-
-  def send_message(user, message)
-    data = {
-        recipient: {id: user},
-        message: {text: message}
-    }.to_json
-    RestClient.post "https://graph.facebook.com/v2.6/me/messages?access_token=#{ENV['PAGE_ACCESS_TOKEN']}",
-                    data, content_type: :json
   end
 end
