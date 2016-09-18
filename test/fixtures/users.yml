@@ -1,0 +1,13 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  messenger_id: MyString
+  name: MyString
+  last_command: MyString
+  last_question: 1
+
+two:
+  messenger_id: MyString
+  name: MyString
+  last_command: MyString
+  last_question: 1
