@@ -20,4 +20,25 @@
 # available at http://guides.rubyonrails.org/i18n.html.
 
 en:
-  hello: "Hello world"
+  ask_name_question: >
+    What's your name, or what would you like me to call you? :)
+
+  ask_name_confirmation: >
+    I think that would be more polite than automatically
+    getting it from your facebook account :P
+
+  ask_name_nice_to_meet: >
+    Nice to meet you %{name}! :D
+
+  ask_name_getting_started: >
+    Type 'register', 'study', or 'quiz me'
+
+  select_quiz_text: "You chose select quiz"
+
+  quiz_me_text: "You chose quiz me"
+
+  study_text: "You chose study"
+
+  unknown_command: "Sorry I don't understand that. Type 'register', 'quiz me', or 'study'"
+
+

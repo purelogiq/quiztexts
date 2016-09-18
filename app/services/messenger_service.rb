@@ -1,4 +1,9 @@
 class MessengerService
+  COMMAND_TO_METHOD = {
+    'register' => :select_quiz,
+    'quiz me' => :quiz_me,
+    'study' => :study
+  }
 
   def initialize(sender_id, input)
     @user = User.find_or_create_by(messenger_id: sender_id)
@@ -7,31 +12,13 @@ class MessengerService
 
   def route_incoming
     return ask_name unless @user.name.present?
-    @input = @input.downcase.strip
-    case @input
-      when 'register'
-        @user.update_attribute(:last_command, 'register')
-        return select_quiz
-      when 'quiz me'
-        @user.update_attribute(:last_command, 'quiz me')
-        return quiz_me
-      when 'study'
-        @user.update_attribute(:last_command, 'study')
-        return study
-      else
-        case @user.last_command
-          when 'register'
-            @user.update_attribute(:last_command, 'register')
-            return select_quiz
-          when 'quiz me'
-            @user.update_attribute(:last_command, 'quiz me')
-            return quiz_me
-          when 'study'
-            @user.update_attribute(:last_command, 'study')
-            return study
-          else
-            return send_message "Sorry I don't understand that. Type 'register', 'quiz me', or 'study'"
-        end
+    command = @input.downcase.strip
+    if COMMAND_TO_METHOD.key?(command) || @user.last_command == command
+      @user.update_attribute(:last_command, command)
+      self.send(COMMAND_TO_METHOD[command])
+    else
+      clear_state
+      unknown_command
     end
   end
 
@@ -41,44 +28,47 @@ class MessengerService
     @user.update_attribute(:last_command, 'ask name')
     if @user.last_question.nil?
       @user.update_attribute(:last_question, 'ask name')
-      send_message "What's your name, or what would you like me to call you? :)"
-      sleep 0.5
-      send_message "I think that would be more polite than automatically getting it from your facebook account :P"
+      send_message :ask_name_question
+      send_message :ask_name_confirmation
     else
       @user.update_attribute(:name, @input)
-      send_message "Nice to meet you #{@user.name}! :D"
-      send_message "Type 'register', 'study', or 'quiz me'"
-      clear_state
+      send_message :ask_name_nice_to_meet, name: @input
+      send_message :ask_name_getting_started
     end
   end
 
   def select_quiz
-    send_message "You chose select quiz"
+    send_message :select_quiz_text
     clear_state
   end
 
   def quiz_me
-    send_message "You quiz me"
+    send_message :quiz_me_text
     clear_state
   end
 
   def study
-    send_message "You study"
+    send_message :study_text
     clear_state
   end
 
-  def send_message(message)
+  def unknown_command
+    send_message :unknown_command
+    clear_state
+  end
+
+  def send_message(message, data_hash={})
     data = {
         recipient: {id: @user.messenger_id},
-        message: {text: message}
+        message: {text: I18n.t(message, data_hash)}
     }.to_json
     RestClient.post "https://graph.facebook.com/v2.6/me/messages?access_token=#{ENV['PAGE_ACCESS_TOKEN']}",
                     data, content_type: :json
+    sleep 1 # In the future use an async task runner.
   end
 
   def clear_state
     @user.update_attribute(:last_command, nil)
     @user.update_attribute(:last_question, nil)
   end
-
 end
