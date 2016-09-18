@@ -2,7 +2,7 @@ class MessagesController < ApplicationController
 
   def webhook
     if params['hub.mode'] == 'subscribe' &&
-         params['hub.verify_token'] == ENV['FACEBOOK_MESSENGER_VERIFY_TOKEN'] # Sorta unsafe
+         params['hub.verify_token'] == ENV['FACEBOOK_MESSENGER_VERIFY_TOKEN']
       render text: params['hub.challenge']
     else
       head :forbidden
