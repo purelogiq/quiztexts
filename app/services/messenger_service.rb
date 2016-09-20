@@ -12,12 +12,11 @@ class MessengerService
 
   def route_incoming
     return ask_name unless @user.name.present?
-    command = @input.downcase.strip
-    if COMMAND_TO_METHOD.key?(command) || @user.last_command == command
+    command = @user.last_command || @input.downcase.strip
+    if COMMAND_TO_METHOD.key?(command)
       @user.update_attribute(:last_command, command)
       self.send(COMMAND_TO_METHOD[command])
     else
-      clear_state
       unknown_command
     end
   end
@@ -34,6 +33,7 @@ class MessengerService
       @user.update_attribute(:name, @input)
       send_message :ask_name_nice_to_meet, name: @input
       send_message :ask_name_getting_started
+      clear_state
     end
   end
 
@@ -42,8 +42,8 @@ class MessengerService
       card_set = QuizletService.find_card_set(@user, @input) # TODO handle failure case
       @user.current_card_set_id = card_set.id
       @user.save
-      clear_state
       send_message :select_quiz_success, title: card_set.title
+      clear_state
     else
       set_last_question 'give quizlet number'
       send_message :select_quiz_give_me_quizlet_number
