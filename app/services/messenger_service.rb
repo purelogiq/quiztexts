@@ -17,7 +17,7 @@ class MessengerService
       @user.update_attribute(:last_command, command)
       self.send(COMMAND_TO_METHOD[command])
     elsif @user.last_command
-      self.send(@user.last_command)
+      self.send(COMMAND_TO_METHOD[@user.last_command])
     else
       unknown_command
     end
