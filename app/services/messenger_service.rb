@@ -38,8 +38,16 @@ class MessengerService
   end
 
   def select_quiz
-    send_message :select_quiz_text
-    clear_state
+    if @user.last_question == 'give quizlet number'
+      card_set = QuizletService.find_card_set(@user, @input) # TODO handle failure case
+      @user.current_card_set_id = card_set.id
+      @user.save
+      clear_state
+      send_message :select_quiz_success, title: card_set.title
+    else
+      set_last_question 'give quizlet number'
+      send_message :select_quiz_give_me_quizlet_number
+    end
   end
 
   def quiz_me
@@ -70,5 +78,9 @@ class MessengerService
   def clear_state
     @user.update_attribute(:last_command, nil)
     @user.update_attribute(:last_question, nil)
+  end
+
+  def set_last_question(question)
+    @user.update_attribute(:last_question, question)
   end
 end

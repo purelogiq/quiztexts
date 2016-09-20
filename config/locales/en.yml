@@ -33,7 +33,11 @@ en:
   ask_name_getting_started: >
     Type 'register', 'study', or 'quiz me'
 
-  select_quiz_text: "You chose select quiz"
+  select_quiz_give_me_quizlet_number: >
+    Alright, go to Quizlets.com and give me the id of
+    a flashcard set you want to study.
+
+  select_quiz_success: "Ok I'm ready to help you study %{title}! Type 'study' or 'quiz me'"
 
   quiz_me_text: "You chose quiz me"
 

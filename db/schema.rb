@@ -10,15 +10,34 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160916135105) do
+ActiveRecord::Schema.define(version: 20160918200507) do
+
+  create_table "card_sets", force: :cascade do |t|
+    t.integer  "user_id"
+    t.string   "quizlet_id"
+    t.string   "title"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
+  create_table "cards", force: :cascade do |t|
+    t.integer  "card_set_id"
+    t.string   "term"
+    t.string   "definition"
+    t.integer  "times_correct", default: 0
+    t.integer  "times_tested",  default: 0
+    t.datetime "created_at",                null: false
+    t.datetime "updated_at",                null: false
+  end
 
   create_table "users", force: :cascade do |t|
     t.string   "messenger_id"
     t.string   "name"
     t.string   "last_command"
-    t.integer  "last_question"
-    t.datetime "created_at",    null: false
-    t.datetime "updated_at",    null: false
+    t.string   "last_question"
+    t.string   "current_card_set_id"
+    t.datetime "created_at",          null: false
+    t.datetime "updated_at",          null: false
   end
 
 end
