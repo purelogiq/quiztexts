@@ -1,8 +1,8 @@
 class MessengerService
   COMMAND_TO_METHOD = {
-    'register' => :select_quiz,
-    'quiz me' => :quiz_me,
-    'study' => :study
+    'select quiz' => :select_quiz,
+    'study' => :study,
+    'quiz me' => :quiz_me
   }
 
   def initialize(sender_id, input)
@@ -12,10 +12,12 @@ class MessengerService
 
   def route_incoming
     return ask_name unless @user.name.present?
-    command = @user.last_command || @input.downcase.strip
+    command = @input.downcase.strip
     if COMMAND_TO_METHOD.key?(command)
       @user.update_attribute(:last_command, command)
       self.send(COMMAND_TO_METHOD[command])
+    elsif @user.last_command
+      self.send(@user.last_command)
     else
       unknown_command
     end
@@ -50,13 +52,32 @@ class MessengerService
     end
   end
 
-  def quiz_me
-    send_message :quiz_me_text
-    clear_state
+  def study
+    unless @user.current_card_set
+      clear_state
+      return send_message :study_choose_set_first
+    end
+
+    unless @user.last_question
+      send_message :study_getting_started
+      return set_last_question '1'
+    end
+
+    current_card_id = @user.last_question.to_i
+    cards = @user.current_card_set.cards
+
+    if current_card_id >= cards.count
+      send_message :study_all_done, count: cards.count
+      set_last_question '1'
+    else
+      card = cards.where(id: current_card_id).take
+      set_last_question (current_card_id + 1).to_s
+      send_message :study_flash_card, term: card.term, definition: card.definition
+    end
   end
 
-  def study
-    send_message :study_text
+  def quiz_me
+    send_message :quiz_me_text
     clear_state
   end
 
@@ -72,7 +93,7 @@ class MessengerService
     }.to_json
     RestClient.post "https://graph.facebook.com/v2.6/me/messages?access_token=#{ENV['PAGE_ACCESS_TOKEN']}",
                     data, content_type: :json
-    sleep 1 # In the future use an async task runner.
+    sleep .7 # In the future use an async task runner.
   end
 
   def clear_state

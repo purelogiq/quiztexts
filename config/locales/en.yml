@@ -31,18 +31,36 @@ en:
     Nice to meet you %{name}! :D
 
   ask_name_getting_started: >
-    Type 'register', 'study', or 'quiz me'
+    Type 'select quiz' to choose a Quizlet set to start studying.
 
   select_quiz_give_me_quizlet_number: >
     Alright, go to Quizlets.com and give me the id of
+
     a flashcard set you want to study.
 
   select_quiz_success: "Ok I'm ready to help you study %{title}! Type 'study' or 'quiz me'"
 
+  study_getting_started: >
+    Ok, I'll message you one flashcard at a time. Type 'next' to move to the next one.
+    You can always choose 'register', or 'quiz me' to stop. Type 'next'.
+
+  study_choose_set_first: "Type 'select quiz' to choose a flashcard set to study"
+
+  study_flash_card: >
+    %{term}
+
+    ----------------
+
+    %{definition}
+
+
+  study_all_done: >
+    You've studied all %{count} cards! Nice job :D!
+    Type 'next' to start from the beginning or 'quiz me' if you're up for a challenge!
+
+
   quiz_me_text: "You chose quiz me"
 
-  study_text: "You chose study"
-
-  unknown_command: "Sorry I don't understand that. Type 'register', 'quiz me', or 'study'"
+  unknown_command: "Sorry I don't understand that. Type 'select quiz', 'quiz me', or 'study'"
 
 
