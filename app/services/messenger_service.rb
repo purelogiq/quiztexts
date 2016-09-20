@@ -93,7 +93,7 @@ class MessengerService
     }.to_json
     RestClient.post "https://graph.facebook.com/v2.6/me/messages?access_token=#{ENV['PAGE_ACCESS_TOKEN']}",
                     data, content_type: :json
-    sleep .7 # In the future use an async task runner.
+    sleep 0.7 # In the future use an async task runner.
   end
 
   def clear_state
