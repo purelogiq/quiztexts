@@ -19,7 +19,7 @@ class QuizletService
 
   def self.get_card_set(id)
     response = RestClient.get "https://api.quizlet.com/2.0/sets/#{id}?client_id=#{ENV['QUIZLET_CLIENT_ID']}",
-                    accept: :json
+                              accept: :json
     JSON.parse(response)
   end
 end

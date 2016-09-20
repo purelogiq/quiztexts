@@ -47,7 +47,7 @@ class MessengerService
       send_message :select_quiz_success, title: card_set.title
       clear_state
     else
-      set_last_question 'give quizlet number'
+      save_last_question 'give quizlet number'
       send_message :select_quiz_give_me_quizlet_number
     end
   end
@@ -60,7 +60,7 @@ class MessengerService
 
     unless @user.last_question
       send_message :study_getting_started
-      return set_last_question '1'
+      return save_last_question '1'
     end
 
     current_card_id = @user.last_question.to_i
@@ -68,10 +68,10 @@ class MessengerService
 
     if current_card_id >= cards.count
       send_message :study_all_done, count: cards.count
-      set_last_question '1'
+      save_last_question '1'
     else
       card = cards.where(id: current_card_id).take
-      set_last_question (current_card_id + 1).to_s
+      save_last_question(current_card_id + 1)
       send_message :study_flash_card, term: card.term, definition: card.definition
     end
   end
@@ -101,7 +101,7 @@ class MessengerService
     @user.update_attribute(:last_question, nil)
   end
 
-  def set_last_question(question)
+  def save_last_question(question)
     @user.update_attribute(:last_question, question)
   end
 end
