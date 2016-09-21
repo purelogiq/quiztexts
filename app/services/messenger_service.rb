@@ -113,6 +113,7 @@ class MessengerService
 
   def help
     send_message :help
+    clear_state
   end
 
   def unknown_command
