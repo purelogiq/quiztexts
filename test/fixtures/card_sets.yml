@@ -1,11 +1,11 @@
 # Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
 
 one:
-  quizlet_id: 1
+  user_id: 1
+  quizlet_id: MyString
   title: MyString
-  created_by: MyString
 
 two:
-  quizlet_id: 1
+  user_id: 1
+  quizlet_id: MyString
   title: MyString
-  created_by: MyString

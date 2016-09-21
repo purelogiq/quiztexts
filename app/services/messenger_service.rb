@@ -1,8 +1,8 @@
 class MessengerService
   COMMAND_TO_METHOD = {
-    'register' => :select_quiz,
-    'quiz me' => :quiz_me,
-    'study' => :study
+    'select quiz' => :select_quiz,
+    'study' => :study,
+    'quiz me' => :quiz_me
   }
 
   def initialize(sender_id, input)
@@ -13,11 +13,12 @@ class MessengerService
   def route_incoming
     return ask_name unless @user.name.present?
     command = @input.downcase.strip
-    if COMMAND_TO_METHOD.key?(command) || @user.last_command == command
+    if COMMAND_TO_METHOD.key?(command)
       @user.update_attribute(:last_command, command)
       self.send(COMMAND_TO_METHOD[command])
+    elsif @user.last_command
+      self.send(COMMAND_TO_METHOD[@user.last_command])
     else
-      clear_state
       unknown_command
     end
   end
@@ -34,21 +35,49 @@ class MessengerService
       @user.update_attribute(:name, @input)
       send_message :ask_name_nice_to_meet, name: @input
       send_message :ask_name_getting_started
+      clear_state
     end
   end
 
   def select_quiz
-    send_message :select_quiz_text
-    clear_state
+    if @user.last_question == 'give quizlet number'
+      card_set = QuizletService.find_card_set(@user, @input) # TODO handle failure case
+      @user.current_card_set_id = card_set.id
+      @user.save
+      send_message :select_quiz_success, title: card_set.title
+      clear_state
+    else
+      save_last_question 'give quizlet number'
+      send_message :select_quiz_give_me_quizlet_number
+    end
+  end
+
+  def study
+    unless @user.current_card_set
+      clear_state
+      return send_message :study_choose_set_first
+    end
+
+    unless @user.last_question
+      send_message :study_getting_started
+      return save_last_question '1'
+    end
+
+    current_card_id = @user.last_question.to_i
+    cards = @user.current_card_set.cards
+
+    if current_card_id >= cards.count
+      send_message :study_all_done, count: cards.count
+      save_last_question '1'
+    else
+      card = cards.where(id: current_card_id).take
+      save_last_question(current_card_id + 1)
+      send_message :study_flash_card, term: card.term, definition: card.definition
+    end
   end
 
   def quiz_me
     send_message :quiz_me_text
-    clear_state
-  end
-
-  def study
-    send_message :study_text
     clear_state
   end
 
@@ -64,11 +93,15 @@ class MessengerService
     }.to_json
     RestClient.post "https://graph.facebook.com/v2.6/me/messages?access_token=#{ENV['PAGE_ACCESS_TOKEN']}",
                     data, content_type: :json
-    sleep 1 # In the future use an async task runner.
+    sleep 0.7 # In the future use an async task runner.
   end
 
   def clear_state
     @user.update_attribute(:last_command, nil)
     @user.update_attribute(:last_question, nil)
+  end
+
+  def save_last_question(question)
+    @user.update_attribute(:last_question, question)
   end
 end
