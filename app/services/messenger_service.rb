@@ -90,7 +90,7 @@ class MessengerService
 
     if @user.last_question == '__start__'
       card = @user.current_card_set.cards.first
-      set_last_question '0'
+      save_last_question '0'
       return send_message :quiz_me_term, term: card.term
     end
 
