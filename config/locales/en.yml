@@ -34,7 +34,7 @@ en:
     Type 'select quiz' to choose a Quizlet set to start studying.
 
   select_quiz_give_me_quizlet_number: >
-    Alright, go to Quizlets.com and give me the id of
+    Alright, go to Quizlet.com and give me the id of
 
     a flashcard set you want to study.
 

@@ -65,17 +65,21 @@ class MessengerService
       return save_last_question '0'
     end
 
-    current_card_num = @user.last_question.to_i
-    cards = @user.current_card_set.cards.to_a
+    # current_card_num = @user.last_question.to_i
+    # cards = @user.current_card_set.cards.to_a
 
-    if current_card_num >= cards.count
-      send_message :study_all_done, count: cards.count
-      save_last_question '0'
-    else
-      card = cards[current_card_num]
-      save_last_question(current_card_num + 1)
-      send_message :study_flash_card, term: card.term, definition: card.definition
-    end
+    # if current_card_num >= cards.count
+    #   send_message :study_all_done, count: cards.count
+    #   save_last_question '0'
+    # else
+    card = cards[current_card_num]
+    min_times_studied = Card.all.to_a.map{|x| x.times_studied}.min
+    card = Card.where(times_studied: min_times_studied).to_a.sample
+
+    card.update_attribute(:times_studied, card.times_studied + 1)
+    # save_last_question(current_card_num + 1)
+    send_message :study_flash_card, term: card.term, definition: card.definition
+    # end
   end
 
   def quiz_me
