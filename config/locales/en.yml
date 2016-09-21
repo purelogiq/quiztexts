@@ -20,4 +20,60 @@
 # available at http://guides.rubyonrails.org/i18n.html.
 
 en:
-  hello: "Hello world"
+  ask_name_question: >
+    What's your name, or what would you like me to call you? :)
+
+  ask_name_confirmation: >
+    I think that would be more polite than automatically
+    getting it from your facebook account :P
+
+  ask_name_nice_to_meet: >
+    Nice to meet you %{name}! :D
+
+  ask_name_getting_started: >
+    Type 'select quiz' to choose a Quizlet set to start studying.
+
+  select_quiz_give_me_quizlet_number: >
+    Alright, go to Quizlets.com and give me the id of
+
+    a flashcard set you want to study.
+
+  select_quiz_success: "Ok I'm ready to help you study %{title}! Type 'study' or 'quiz me'"
+
+  study_getting_started: >
+    Ok, I'll message you one flashcard at a time. Type 'next' to move to the next one.
+    You can always choose 'register', or 'quiz me' to stop. Type 'next'.
+
+  study_choose_set_first: "Type 'select quiz' to choose a flashcard set to study"
+
+  study_flash_card: >
+    %{term}
+
+    ----------------
+
+    %{definition}
+
+  study_all_done: >
+    You've studied all %{count} cards! Nice job :D!
+    Type 'next' to start from the beginning or 'quiz me' if you're up for a challenge!
+
+  quiz_me_getting_started: >
+    Ok, I'll message you one flashcard at a time. You tell me the definition.
+    Got it? Type 'start' to begin.
+
+  quiz_me_term: >
+    Term: %{term}
+
+  quiz_me_correct: >
+    Correct! Nice job :). %{comment}
+
+  quiz_me_incorrect: >
+    Sorry! That's wrong :(. The correct answer is %{definition}. %{comment}
+
+  quiz_me_all_done: >
+    You've studied all %{count} cards! Nice!!
+    Type 'next' to start over or 'study' to get some extra practice.
+
+  unknown_command: "Sorry I don't understand that. Type 'select quiz', 'quiz me', or 'study'"
+
+
