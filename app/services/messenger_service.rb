@@ -14,6 +14,7 @@ class MessengerService
     return ask_name unless @user.name.present?
     command = @input.downcase.strip
     if COMMAND_TO_METHOD.key?(command)
+      clear_state
       @user.update_attribute(:last_command, command)
       self.send(COMMAND_TO_METHOD[command])
     elsif @user.last_command
@@ -134,7 +135,7 @@ class MessengerService
   end
 
   def quiz_me_check_correctness(card, comment)
-    if card.definition.lowercase.strip == @input.lowercase.strip
+    if card.definition.downcase.strip == @input.downcase.strip
       send_message :quiz_me_correct, comment: comment
     else
       send_message :quiz_me_incorrect, definition: card.definition, comment: comment
