@@ -2,7 +2,7 @@ class MessengerService
   COMMAND_TO_METHOD = {
     'select quiz' => :select_quiz,
     'study' => :study,
-    'quiz me' => :quiz_me
+    'quiz me' => :quiz_me,
     'help' => :help
   }
 
