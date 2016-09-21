@@ -3,6 +3,7 @@ class MessengerService
     'select quiz' => :select_quiz,
     'study' => :study,
     'quiz me' => :quiz_me
+    'help' => :help
   }
 
   def initialize(sender_id, input)
@@ -108,6 +109,10 @@ class MessengerService
       save_last_question(current_card_num + 1)
       send_message :quiz_me_term, term: next_card.term
     end
+  end
+
+  def help
+    send_message :help
   end
 
   def unknown_command
