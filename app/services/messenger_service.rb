@@ -60,25 +60,53 @@ class MessengerService
 
     unless @user.last_question
       send_message :study_getting_started
-      return save_last_question '1'
+      return save_last_question '0'
     end
 
-    current_card_id = @user.last_question.to_i
-    cards = @user.current_card_set.cards
+    current_card_num = @user.last_question.to_i
+    cards = @user.current_card_set.cards.to_a
 
-    if current_card_id >= cards.count
+    if current_card_num >= cards.count
       send_message :study_all_done, count: cards.count
-      save_last_question '1'
+      save_last_question '0'
     else
-      card = cards.where(id: current_card_id).take
-      save_last_question(current_card_id + 1)
+      card = cards[current_card_num]
+      save_last_question(current_card_num + 1)
       send_message :study_flash_card, term: card.term, definition: card.definition
     end
   end
 
   def quiz_me
-    send_message :quiz_me_text
-    clear_state
+    unless @user.current_card_set
+      clear_state
+      return send_message :study_choose_set_first
+    end
+
+    unless @user.last_question
+      send_message :quiz_me_getting_started
+      return save_last_question '__start__'
+    end
+
+    if @user.last_question == '__start__'
+      card = @user.current_card_set.cards.first
+      set_last_question '0'
+      return send_message :quiz_me_term, term: card.term
+    end
+
+    current_card_num = @user.last_question.to_i
+    cards = @user.current_card_set.cards.to_a
+    last_card = cards[current_card_num]
+
+    if current_card_num + 1 >= cards.count
+      quiz_me_check_correctness(last_card, '')
+      send_message :quiz_me_all_done, count: cards.count
+      save_last_question '__start__'
+    else
+      quiz_me_check_correctness(last_card, 'On to the next one!')
+      next_card = cards[current_card_num + 1]
+      save_last_question(current_card_num + 1)
+      send_message :quiz_me_term, term: next_card.term
+    end
   end
 
   def unknown_command
@@ -103,5 +131,13 @@ class MessengerService
 
   def save_last_question(question)
     @user.update_attribute(:last_question, question)
+  end
+
+  def quiz_me_check_correctness(card, comment)
+    if card.definition.lowercase.strip == @input.lowercase.strip
+      send_message :quiz_me_correct, comment: comment
+    else
+      send_message :quiz_me_incorrect, definition: card.definition, comment: comment
+    end
   end
 end
