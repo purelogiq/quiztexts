@@ -4,7 +4,8 @@ class CreateUsers < ActiveRecord::Migration[5.0]
       t.string :messenger_id
       t.string :name
       t.string :last_command
-      t.integer :last_question
+      t.string :last_question
+      t.string :current_card_set_id
 
       t.timestamps
     end
