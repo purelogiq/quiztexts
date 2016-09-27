@@ -65,24 +65,15 @@ class MessengerService
       return save_last_question '0'
     end
 
-    # current_card_num = @user.last_question.to_i
-    # cards = @user.current_card_set.cards.to_a
-
-    # if current_card_num >= cards.count
-    #   send_message :study_all_done, count: cards.count
-    #   save_last_question '0'
-    # else
-    # card = cards[current_card_num]
     min_times_studied = Card.all.to_a.map{|x| x.times_studied}.min
     card = Card.where(times_studied: min_times_studied).to_a.sample
 
     card.update_attribute(:times_studied, card.times_studied + 1)
-    # save_last_question(current_card_num + 1)
     send_message :study_flash_card, term: card.term, definition: card.definition
-    # end
   end
 
   def quiz_me
+
     unless @user.current_card_set
       clear_state
       return send_message :study_choose_set_first
@@ -99,20 +90,37 @@ class MessengerService
       return send_message :quiz_me_term, term: card.term
     end
 
-    current_card_num = @user.last_question.to_i
-    cards = @user.current_card_set.cards.to_a
-    last_card = cards[current_card_num]
+    # current_card_num = @user.last_question.to_i
+    # cards = @user.current_card_set.cards.to_a
+    # last_card = cards[current_card_num]
 
-    if current_card_num + 1 >= cards.count
+    min_times_correct = Card.all.to_a.map{|x| x.times_correct}.min
+    card = Card.where("times_correct < ?", 3).where(times_correct: min_times_correct).to_a.sample
+
+    card.update_attribute(:times_correct, card.times_correct + 1)
+    send_message :study_flash_card, term: card.term, definition: card.definition
+
+    if card.nil?
       quiz_me_check_correctness(last_card, '')
       send_message :quiz_me_all_done, count: cards.count
       save_last_question '__start__'
     else
       quiz_me_check_correctness(last_card, 'On to the next one!')
-      next_card = cards[current_card_num + 1]
-      save_last_question(current_card_num + 1)
+      next_card = card
+      save_last_question(card)
       send_message :quiz_me_term, term: next_card.term
     end
+
+    # if current_card_num + 1 >= cards.count
+    #   quiz_me_check_correctness(last_card, '')
+    #   send_message :quiz_me_all_done, count: cards.count
+    #   save_last_question '__start__'
+    # else
+    #   quiz_me_check_correctness(last_card, 'On to the next one!')
+    #   next_card = cards[current_card_num + 1]
+    #   save_last_question(current_card_num + 1)
+    #   send_message :quiz_me_term, term: next_card.term
+    # end
   end
 
   def help
