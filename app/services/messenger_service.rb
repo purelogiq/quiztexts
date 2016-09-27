@@ -145,7 +145,9 @@ class MessengerService
   end
 
   def quiz_me_check_correctness(card, comment)
-    if card.definition.downcase.strip == @input.downcase.strip
+    if @input.downcase.strip == "help"
+      send_message :help
+    elsif card.definition.downcase.strip == @input.downcase.strip
       send_message :quiz_me_correct, comment: comment
     else
       send_message :quiz_me_incorrect, definition: card.definition, comment: comment
