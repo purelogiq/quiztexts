@@ -66,7 +66,7 @@ class MessengerService
     end
 
     # current_card_num = @user.last_question.to_i
-    # cards = @user.current_card_set.cards.to_a
+    cards = @user.current_card_set.cards.to_a
 
     # if current_card_num >= cards.count
     #   send_message :study_all_done, count: cards.count

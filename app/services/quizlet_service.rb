@@ -22,4 +22,7 @@ class QuizletService
                               accept: :json
     JSON.parse(response)
   end
+
+  def self.search_for_set(term)
+  end
 end
