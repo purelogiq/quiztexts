@@ -66,13 +66,13 @@ class MessengerService
     end
 
     # current_card_num = @user.last_question.to_i
-    cards = @user.current_card_set.cards.to_a
+    # cards = @user.current_card_set.cards.to_a
 
     # if current_card_num >= cards.count
     #   send_message :study_all_done, count: cards.count
     #   save_last_question '0'
     # else
-    card = cards[current_card_num]
+    # card = cards[current_card_num]
     min_times_studied = Card.all.to_a.map{|x| x.times_studied}.min
     card = Card.where(times_studied: min_times_studied).to_a.sample
 
