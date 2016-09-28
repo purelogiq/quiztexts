@@ -1,42 +1,222 @@
+<style type="text/css">
 
-<br /><br />
-<div class="ui sixteen column grid">
-  <div class="four wide column"></div>
-  <div class="eight wide column">
-    <div class="ui segment">
-      <div class="ui huge header">FlashTxts!</div>
-      <p></p>
-      <div class="ui medium header">Flash cards via text!</div>
-      <p></p>
-      <div class="ui massive horizontal divided list">
-        <div class="item">
-          <%= image_tag 'israel.png', class: 'ui avatar image' %>
-          <div class="content">
-            <div class="header">Israel</div>
-          </div>
+    .hidden.menu {
+      display: none;
+    }
+
+    .masthead.segment {
+      min-height: 700px;
+      padding: 1em 0em;
+    }
+    .masthead .logo.item img {
+      margin-right: 1em;
+    }
+    .masthead .ui.menu .ui.button {
+      margin-left: 0.5em;
+    }
+    .masthead h1.ui.header {
+      margin-top: 3em;
+      margin-bottom: 0em;
+      font-size: 4em;
+      font-weight: normal;
+    }
+    .masthead h2 {
+      font-size: 1.7em;
+      font-weight: normal;
+    }
+
+    .ui.vertical.stripe {
+      padding: 8em 0em;
+    }
+    .ui.vertical.stripe h3 {
+      font-size: 2em;
+    }
+    .ui.vertical.stripe .button + h3,
+    .ui.vertical.stripe p + h3 {
+      margin-top: 3em;
+    }
+    .ui.vertical.stripe .floated.image {
+      clear: both;
+    }
+    .ui.vertical.stripe p {
+      font-size: 1.33em;
+    }
+    .ui.vertical.stripe .horizontal.divider {
+      margin: 3em 0em;
+    }
+
+    .quote.stripe.segment {
+      padding: 0em;
+    }
+    .quote.stripe.segment .grid .column {
+      padding-top: 5em;
+      padding-bottom: 5em;
+    }
+
+    .footer.segment {
+      padding: 5em 0em;
+    }
+
+    .secondary.pointing.menu .toc.item {
+      display: none;
+    }
+
+    @media only screen and (max-width: 700px) {
+      .ui.fixed.menu {
+        display: none !important;
+      }
+      .secondary.pointing.menu .item,
+      .secondary.pointing.menu .menu {
+        display: none;
+      }
+      .secondary.pointing.menu .toc.item {
+        display: block;
+      }
+      .masthead.segment {
+        min-height: 350px;
+      }
+      .masthead h1.ui.header {
+        font-size: 2em;
+        margin-top: 1.5em;
+      }
+      .masthead h2 {
+        margin-top: 0.5em;
+        font-size: 1.5em;
+      }
+    }
+
+
+  </style>
+  <script>
+  $(document)
+    .ready(function() {
+
+      // fix menu when passed
+      $('.masthead')
+        .visibility({
+          once: false,
+          onBottomPassed: function() {
+            $('.fixed.menu').transition('fade in');
+          },
+          onBottomPassedReverse: function() {
+            $('.fixed.menu').transition('fade out');
+          }
+        })
+      ;
+
+      // create sidebar and attach to menu open
+      $('.ui.sidebar')
+        .sidebar('attach events', '.toc.item')
+      ;
+
+    })
+  ;
+  </script>
+
+<!-- Following Menu -->
+<div class="ui large top fixed hidden menu">
+  <div class="ui container">
+    <div class="right menu">
+      <div class="item">
+        <a class="ui primary button" href="https://www.facebook.com/flashtxts/" target="_blank">Talk to @FlashTxts</a>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Sidebar Menu -->
+
+
+<!-- Page Contents -->
+<div class="pusher">
+  <div class="ui vertical masthead center aligned segment homepage-cover">
+
+    
+
+    <div class="ui text container">
+      <h1 class="ui  header">
+        FlashTxts
+      </h1>
+      <h2>Flashcards via Messenger. </h2>
+      <div class="ui huge primary button"> <a href="https://www.facebook.com/flashtxts/" target="_blank" style="color: white"> Talk to @FlashTxts</a> <i class="right arrow icon"></i></div>
+    </div>
+
+  </div>
+
+  <div class="ui vertical stripe segment">
+    <div class="ui middle aligned stackable grid container">
+      <div class="row">
+        <div class="eight wide column">
+          <h3 class="ui header">Study with Flashy!</h3>
+          <p>Flashy is talking flashcard that is determined to help you study over a period of time and through repeated quizzing. Everyone is on communicates through Facebook, so why not use it to talk to Flashy to study for your test? It is so easy!</p>
+          <h3 class="ui header">Cram for your test no more!</h3>
+          <p>No one likes cramming for a test, but everyone does it. It is difficult to find the time and effort to study in advance. FlashTxts is the solution to your bad study habits. Just message FlashTxts the code of the Quizlet set you want to study and the date of your exam. Flashy will then start prepping you by quizzing you throughout the day - every day, so that you will have mastered the material by your test date. </p>
         </div>
-        <div class="item">
-          <%= image_tag 'Christabelle.jpg', class: 'ui avatar image' %>
-          <div class="content">
-            <div class="header">Christabelle</div>
-          </div>
+        <div class="six wide right floated column">
+
+          <%= image_tag 'flashy.png', class: "ui large rounded image" %>
+  
         </div>
-        <div class="item">
-          <%= image_tag 'gus.png', class: 'ui avatar image' %>
-          <div class="content">
-            <div class="header">Gus</div>
-          </div>
+      </div>
+      <div class="row">
+        <div class="center aligned column">
+          <a href="https://www.facebook.com/flashtxts/" target="_blank" class="ui huge button">Talk to Flashy!</a>
         </div>
       </div>
     </div>
-    <div
-       class="fb-like"
-       data-share="true"
-       data-width="450"
-       data-show-faces="true">
+  </div>
+
+
+  <div class="ui vertical stripe quote segment">
+    <div class="ui equal width stackable internally celled grid">
+      <div class="center aligned row">
+        <div class="column">
+          <h3>"This is a Game-Changer"</h3>
+          
+          <p>It's so easy to just quickly chat with Flashy and start studying for bits of time throughout the day!</p>
+          <%= image_tag 'israel.png', class: 'ui avatar image' %>
+            <b>Israel</b> Senior Carnegie Mellon Student
+        </div>
+        <div class="column">
+          <h3>"I'm starting to use Flashcards again"</h3>
+          <p>
+            I have so many German vocabulary terms to memorize every semester. With FlashTxts, I can easily study for quizzes bit-by-bit, on the go instead of the night before!</p>
+            <%= image_tag 'gus.png', class: 'ui avatar image' %>
+            <b>Gus</b> Senior Carnegie Mellon Student
+          
+        </div>
+      </div>
     </div>
   </div>
 
-  <div class="four column"></div>
+  <div class="ui vertical stripe segment">
+    <div class="ui text container">
+      <h3 class="ui header">No Registration Required!</h3>
+      <p>You don't need to sign up or register to talk to Flashy. Simply search for @flashtxts on Facebook Messenger and you can immediately start talking to Flashy! He will say hello back and ask you which Quizlet Study Set you want to study. It is that easy!</p>
+      <h4 class="ui horizontal header divider">
+        <a href="#">Little Effort Required</a>
+      </h4>
+      <h3 class="ui header">Use your existing Quizlet Study Set Cards</h3>
+      <p>FlashTxts uses the Quizlet API to pull your existing Quizlet Study Sets. Simply search for the number code of the Quizlet Study Set and FlashTxts will take care of the rest! You don't have to open your notes, download a new app, or open a website to start studying.</p>
+
+
+      <a class="ui large button" href="https://quizlet.com/" target="_blank">Go to Quizlet</a>
+    </div>
+  </div>
+
+
+  <div class="ui inverted vertical footer segment">
+    <div class="ui container">
+      <div class="ui stackable inverted divided equal height stackable grid">
+        <div class="seven wide column">
+          <h4 class="ui inverted header">67-475 Go!</h4>
+          <p>Copyright© 2016 | Christabelle Wong, Gus Henry, Israel Madueme</p>
+        </div>
+      </div>
+    </div>
+  </div>
 </div>
+
+
+
 
