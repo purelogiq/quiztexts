@@ -96,7 +96,7 @@ class MessengerService
 
     current_card_num = @user.last_question.to_i
     # cards = @user.current_card_set.cards.to_a
-    # last_card = cards[current_card_num]
+    last_card = cards[current_card_num]
 
     card.update_attribute(:times_correct, card.times_correct + 1)
     send_message :study_flash_card, term: card.term, definition: card.definition
