@@ -84,7 +84,6 @@ class MessengerService
       return save_last_question '__start__'
     end
 
-    last_card = Card.find(@user.last_question)
 
     min_times_correct = Card.all.to_a.map{|x| x.times_correct}.min
     card = Card.where("times_correct < ?", 3).where(times_correct: min_times_correct).to_a.sample
@@ -94,6 +93,8 @@ class MessengerService
       save_last_question card.id
       return send_message :quiz_me_term, term: card.term
     end
+
+    last_card = Card.find(@user.last_question)
 
     # last_card = Card.find(@user.last_card)
 
