@@ -106,7 +106,7 @@ class MessengerService
       quiz_me_check_correctness(last_card, 'On to the next one!')
       next_card = card
       @user.update_attribute(:last_question, next_card.id)
-      save_last_question(card)
+      save_last_question(card.id)
       send_message :quiz_me_term, term: next_card.term
     end
 
