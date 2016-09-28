@@ -84,21 +84,16 @@ class MessengerService
       return save_last_question '__start__'
     end
 
+    last_card = Card.find(@user.last_question)
+
     min_times_correct = Card.all.to_a.map{|x| x.times_correct}.min
     card = Card.where("times_correct < ?", 3).where(times_correct: min_times_correct).to_a.sample
 
+
     if @user.last_question == '__start__'
-      # card = @user.current_card_set.cards.first
-      # save_last_question '0'
-      # save_last_question card.id
+      save_last_question card.id
       return send_message :quiz_me_term, term: card.term
     end
-
-    current_card_num = @user.last_question.to_i
-    # cards = @user.current_card_set.cards.to_a
-    last_card = Card.find(current_card_num)
-
-    card.update_attribute(:times_correct, card.times_correct + 1)
 
     # last_card = Card.find(@user.last_card)
 
@@ -156,10 +151,11 @@ class MessengerService
   end
 
   def quiz_me_check_correctness(card, comment)
-    if @input.downcase.strip == "help"
-      send_message :help
-    elsif card.definition.downcase.strip == @input.downcase.strip
+    # if @input.downcase.strip == "help"
+    #   send_message :help
+    if card.definition.downcase.strip == @input.downcase.strip
       send_message :quiz_me_correct, comment: comment
+      card.update_attribute(:times_correct, card.times_correct + 1)
     else
       send_message :quiz_me_incorrect, definition: card.definition, comment: comment
     end

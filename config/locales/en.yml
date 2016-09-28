@@ -21,14 +21,14 @@
 
 en:
   ask_name_question: >
-    What's your name, or what would you like me to call you? :)
+    What's your name, or what would you like me to call you?
 
   ask_name_confirmation: >
     I think that would be more polite than automatically
-    getting it from your facebook account :P
+    getting it from your facebook account.
 
   ask_name_nice_to_meet: >
-    Nice to meet you %{name}! :D
+    Nice to meet you %{name}!
 
   ask_name_getting_started: >
     Type 'select quiz' to choose a Quizlet set to start studying.
@@ -68,7 +68,7 @@ en:
     Correct! Nice job :). %{comment}
 
   quiz_me_incorrect: >
-    Sorry! That's wrong :(. The correct answer is %{definition}. %{comment}
+    Sorry! That's wrong. The correct answer is %{definition}. %{comment}
 
   quiz_me_all_done: >
     You've studied all %{count} cards! Nice!!
