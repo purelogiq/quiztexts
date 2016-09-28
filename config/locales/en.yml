@@ -64,11 +64,23 @@ en:
   quiz_me_term: >
     Term: %{term}
 
-  quiz_me_correct: >
+  quiz_me_correct_1: >
     Correct! Nice job :). %{comment}
 
-  quiz_me_incorrect: >
+  quiz_me_correct_2: >
+    Good work! %{comment}
+
+  quiz_me_correct_3: >
+    You got it! %{comment}
+
+  quiz_me_incorrect_1: >
     Sorry! That's wrong. The correct answer is %{definition}. %{comment}
+
+  quiz_me_incorrect_2: >
+    Not quite - the correct answer is %{definition}. %{comment}
+
+  quiz_me_incorrect_3: >
+    Incorrect. The correct answer is %{definition}. %{comment}
 
   quiz_me_all_done: >
     You've studied all %{count} cards! Nice!!

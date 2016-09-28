@@ -6,6 +6,14 @@ class MessengerService
     'help' => :help
   }
 
+  QUIZ_ME_CORRECT_MESSAGES = [:quiz_me_correct_1, 
+                              :quiz_me_correct_2, 
+                              :quiz_me_correct_3]
+
+  QUIZ_ME_INCORRECT_MESSAGES = [:quiz_me_incorrect_1, 
+                                :quiz_me_incorrect_2, 
+                                :quiz_me_incorrect_3]
+
   def initialize(sender_id, input)
     @user = User.find_or_create_by(messenger_id: sender_id)
     @input = input
@@ -84,7 +92,6 @@ class MessengerService
       return save_last_question '__start__'
     end
 
-
     min_times_correct = Card.all.to_a.map{|x| x.times_correct}.min
     card = Card.where("times_correct < ?", 3).where(times_correct: min_times_correct).to_a.sample
 
@@ -95,8 +102,6 @@ class MessengerService
     end
 
     last_card = Card.find(@user.last_question)
-
-    # last_card = Card.find(@user.last_card)
 
     if card.nil?
       quiz_me_check_correctness(last_card, '')
@@ -109,17 +114,6 @@ class MessengerService
       save_last_question(card.id)
       send_message :quiz_me_term, term: next_card.term
     end
-
-    # if current_card_num + 1 >= cards.count
-    #   quiz_me_check_correctness(last_card, '')
-    #   send_message :quiz_me_all_done, count: cards.count
-    #   save_last_question '__start__'
-    # else
-    #   quiz_me_check_correctness(last_card, 'On to the next one!')
-    #   next_card = cards[current_card_num + 1]
-    #   save_last_question(current_card_num + 1)
-    #   send_message :quiz_me_term, term: next_card.term
-    # end
   end
 
   def help
@@ -152,13 +146,11 @@ class MessengerService
   end
 
   def quiz_me_check_correctness(card, comment)
-    # if @input.downcase.strip == "help"
-    #   send_message :help
     if card.definition.downcase.strip == @input.downcase.strip
-      send_message :quiz_me_correct, comment: comment
+      send_message QUIZ_ME_CORRECT_MESSAGES.sample, comment: comment
       card.update_attribute(:times_correct, card.times_correct + 1)
     else
-      send_message :quiz_me_incorrect, definition: card.definition, comment: comment
+      send_message QUIZ_ME_INCORRECT_MESSAGES.sample, definition: card.definition, comment: comment
     end
   end
 end
