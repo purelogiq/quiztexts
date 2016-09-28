@@ -13,3 +13,9 @@
  *= require_tree .
  *= require_self
  */
+
+div.homepage-cover {
+    background-image: url(image_path("FlashTxts_Facebook_Cover.jpg")) !important;
+    background-size: 100% 100% !important;
+    background-repeat: no-repeat !important;
+}
