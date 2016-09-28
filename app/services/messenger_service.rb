@@ -2,8 +2,17 @@ class MessengerService
   COMMAND_TO_METHOD = {
     'select quiz' => :select_quiz,
     'study' => :study,
-    'quiz me' => :quiz_me
+    'quiz me' => :quiz_me,
+    'help' => :help
   }
+
+  QUIZ_ME_CORRECT_MESSAGES = [:quiz_me_correct_1, 
+                              :quiz_me_correct_2, 
+                              :quiz_me_correct_3]
+
+  QUIZ_ME_INCORRECT_MESSAGES = [:quiz_me_incorrect_1, 
+                                :quiz_me_incorrect_2, 
+                                :quiz_me_incorrect_3]
 
   def initialize(sender_id, input)
     @user = User.find_or_create_by(messenger_id: sender_id)
@@ -54,7 +63,7 @@ class MessengerService
   end
 
   def study
-    unless @user.current_card_set
+    unless @user.current_card_set.first
       clear_state
       return send_message :study_choose_set_first
     end
@@ -64,21 +73,16 @@ class MessengerService
       return save_last_question '0'
     end
 
-    current_card_num = @user.last_question.to_i
-    cards = @user.current_card_set.cards.to_a
+    min_times_studied = Card.all.to_a.map{|x| x.times_studied}.min
+    card = Card.where(times_studied: min_times_studied).to_a.sample
 
-    if current_card_num >= cards.count
-      send_message :study_all_done, count: cards.count
-      save_last_question '0'
-    else
-      card = cards[current_card_num]
-      save_last_question(current_card_num + 1)
-      send_message :study_flash_card, term: card.term, definition: card.definition
-    end
+    card.update_attribute(:times_studied, card.times_studied + 1)
+    send_message :study_flash_card, term: card.term, definition: card.definition
   end
 
   def quiz_me
-    unless @user.current_card_set
+
+    unless @user.current_card_set.first
       clear_state
       return send_message :study_choose_set_first
     end
@@ -88,26 +92,33 @@ class MessengerService
       return save_last_question '__start__'
     end
 
+    min_times_correct = @user.current_card_set.cards.all.to_a.map{|x| x.times_correct}.min
+    card = @user.current_card_set.cards.where("times_correct < ?", 3).where(times_correct: min_times_correct).to_a.sample
+
+
     if @user.last_question == '__start__'
-      card = @user.current_card_set.cards.first
-      save_last_question '0'
+      save_last_question card.id
       return send_message :quiz_me_term, term: card.term
     end
 
-    current_card_num = @user.last_question.to_i
-    cards = @user.current_card_set.cards.to_a
-    last_card = cards[current_card_num]
+    last_card = Card.find(@user.last_question)
 
-    if current_card_num + 1 >= cards.count
+    if card.nil?
       quiz_me_check_correctness(last_card, '')
       send_message :quiz_me_all_done, count: cards.count
       save_last_question '__start__'
     else
       quiz_me_check_correctness(last_card, 'On to the next one!')
-      next_card = cards[current_card_num + 1]
-      save_last_question(current_card_num + 1)
+      next_card = card
+      @user.update_attribute(:last_question, next_card.id)
+      save_last_question(card.id)
       send_message :quiz_me_term, term: next_card.term
     end
+  end
+
+  def help
+    send_message :help
+    clear_state
   end
 
   def unknown_command
@@ -136,9 +147,10 @@ class MessengerService
 
   def quiz_me_check_correctness(card, comment)
     if card.definition.downcase.strip == @input.downcase.strip
-      send_message :quiz_me_correct, comment: comment
+      send_message QUIZ_ME_CORRECT_MESSAGES.sample, comment: comment
+      card.update_attribute(:times_correct, card.times_correct + 1)
     else
-      send_message :quiz_me_incorrect, definition: card.definition, comment: comment
+      send_message QUIZ_ME_INCORRECT_MESSAGES.sample, definition: card.definition, comment: comment
     end
   end
 end
