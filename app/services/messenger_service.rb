@@ -63,7 +63,7 @@ class MessengerService
   end
 
   def study
-    unless @user.current_card_set.first
+    unless @user.current_card_set
       clear_state
       return send_message :study_choose_set_first
     end
