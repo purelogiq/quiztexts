@@ -100,7 +100,7 @@ class MessengerService
     card.update_attribute(:times_correct, card.times_correct + 1)
     send_message :study_flash_card, term: card.term, definition: card.definition
 
-    last_card = @user.last_card
+    last_card = Card.find(@user.last_card)
 
     if card.nil?
       quiz_me_check_correctness(last_card, '')
@@ -109,6 +109,7 @@ class MessengerService
     else
       quiz_me_check_correctness(last_card, 'On to the next one!')
       next_card = card
+      @user.update_attribute(:last_question, next_card.id)
       save_last_question(card)
       send_message :quiz_me_term, term: next_card.term
     end

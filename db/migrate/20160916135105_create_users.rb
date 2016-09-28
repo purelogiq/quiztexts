@@ -6,7 +6,7 @@ class CreateUsers < ActiveRecord::Migration[5.0]
       t.string :last_command
       t.string :last_question
       t.string :current_card_set_id
-      t.string :last_card
+      t.integer :last_card
 
       t.timestamps
     end
