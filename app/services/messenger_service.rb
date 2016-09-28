@@ -90,13 +90,13 @@ class MessengerService
     if @user.last_question == '__start__'
       # card = @user.current_card_set.cards.first
       # save_last_question '0'
-      save_last_question card.id.to_s
+      save_last_question card.id
       return send_message :quiz_me_term, term: card.term
     end
 
     current_card_num = @user.last_question.to_i
     # cards = @user.current_card_set.cards.to_a
-    last_card = cards[current_card_num]
+    last_card = Card.find(current_card_num)
 
     card.update_attribute(:times_correct, card.times_correct + 1)
     send_message :study_flash_card, term: card.term, definition: card.definition
