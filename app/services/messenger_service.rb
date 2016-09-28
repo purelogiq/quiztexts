@@ -63,7 +63,7 @@ class MessengerService
   end
 
   def study
-    unless @user.current_card_set
+    unless @user.current_card_set.first
       clear_state
       return send_message :study_choose_set_first
     end
@@ -82,7 +82,7 @@ class MessengerService
 
   def quiz_me
 
-    unless @user.current_card_set
+    unless @user.current_card_set.first
       clear_state
       return send_message :study_choose_set_first
     end
@@ -92,8 +92,8 @@ class MessengerService
       return save_last_question '__start__'
     end
 
-    min_times_correct = Card.all.to_a.map{|x| x.times_correct}.min
-    card = Card.where("times_correct < ?", 3).where(times_correct: min_times_correct).to_a.sample
+    min_times_correct = @user.current_card_set.cards.all.to_a.map{|x| x.times_correct}.min
+    card = @user.current_card_set.cards.where("times_correct < ?", 3).where(times_correct: min_times_correct).to_a.sample
 
 
     if @user.last_question == '__start__'
